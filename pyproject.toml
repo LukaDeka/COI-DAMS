@@ -1,0 +1,97 @@
+[project]
+name = "COI-DAMS"
+version = "0.1.0"
+description = "Conflict Of Interest Detection And Management System"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "lxml>=6.1.1",
+    "pyarrow>=24.0.0",
+    "pyspark==3.5.6",
+]
+
+[project.scripts]
+coi = "coi_dams.main:main_coi"
+qualify = "coi_dams.main:main_qualify"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-cov>=7",
+    "black>=25",
+    "ruff>=0.17",
+    "mypy>=1.14",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "F",
+    "E",
+    "W",
+    "I",
+    "UP",
+    "B",
+    "SIM",
+    "C4",
+    "C90",
+    "RUF",
+    "S",
+    "PLE",
+    "PLW",
+]
+ignore = [
+    "E501",
+    "N812",
+    "PLW2901",
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["coi_dams", "conftest"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 12
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "SLF001"]
+"src/coi_dams/webhdfs.py" = ["S310"]
+"misc/*" = ["S310"]
+
+[tool.mypy]
+python_version = "3.12"
+files = ["src"]
+ignore_missing_imports = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_unreachable = true
+
+[tool.coverage.run]
+source = ["src/coi_dams"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+]
